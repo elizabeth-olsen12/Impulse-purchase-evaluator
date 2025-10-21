@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Impulse Purchase Evaluator</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
+    :root {
+      --green-bg: #d1fae5;
+      --green-text: #065f46;
+      --orange-bg: #fef3c7;
+      --orange-text: #92400e;
+      --red-bg: #fee2e2;
+      --red-text: #991b1b;
+      --card-radius: 12px;
+      --shadow: 0 4px 8px rgba(0,0,0,0.1);
+      --btn-bg: #3b82f6;
+      --btn-bg-hover: #2563eb;
+      --btn-text: #fff;
+      --input-border: #d1d5db;
+      --input-focus: #3b82f6;
+      --bg-light: #f9fafb;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-light);
+      color: #111827;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+    }
+    .container {
+      max-width: 420px;
+      width: 100%;
+      background: white;
+      border-radius: var(--card-radius);
+      box-shadow: var(--shadow);
+      padding: 24px 28px 36px;
+      display: flex;
+      flex-direction: column;
+    }
+    h1 {
+      margin: 0 0 4px 0;
+      font-weight: 700;
+      font-size: 1.8rem;
+    }
+    p.subtitle {
+      margin: 0 0 24px 0;
+      font-weight: 500;
+      color: #6b7280;
+    }
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #374151;
+    }
+    .input-group {
+      margin-bottom: 20px;
+    }
+    input[type="number"] {
+      width: 100%;
+      padding: 10px 12px;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: 1.5px solid var(--input-border);
+      transition: border-color 0.3s;
+    }
+    input[type="number"]:focus {
+      outline: none;
+      border-color: var(--input-focus);
+      box-shadow: 0 0 4px var(--btn-bg);
+    }
+    .input-with-symbol {
+      position: relative;
+    }
+    .input-with-symbol span.symbol {
+      position: absolute;
+      top: 50%;
+      left: 12px;
+      transform: translateY(-50%);
+      font-weight: 600;
+      color: #4b5563;
+      pointer-events: none;
+    }
+    .input-with-symbol input[type="number"] {
+      padding-left: 26px;
+    }
+    .radio-group, .mood-group {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .toggle-button {
+      flex: 1;
+      background: #f3f4f6;
+      border: 1.5px solid #d1d5db;
+      border-radius: 12px;
+      padding: 10px 0;
+      font-weight: 600;
+      font-size: 1rem;
+      text-align: center;
+      cursor: pointer;
+      user-select: none;
+      transition: background-color 0.25s, border-color 0.25s, color 0.25s;
+    }
+    .toggle-button.selected {
+      background-color: var(--btn-bg);
+      border-color: var(--btn-bg);
+      color: var(--btn-text);
+    }
+    .toggle-button.emoji {
+      font-size: 1.4rem;
+    }
+    button {
+      font-family: inherit;
+    }
+    button#check-btn {
+      width: 100%;
+      background-color: var(--btn-bg);
+      border: none;
+      color: var(--btn-text);
+      font-weight: 700;
+      font-size: 1.1rem;
+      padding: 14px 0;
+      border-radius: var(--card-radius);
+      cursor: pointer;
+      box-shadow: var(--shadow);
+      transition: background-color 0.3s;
+    }
+    button#check-btn:hover {
+      background-color: var(--btn-bg-hover);
+    }
+    .result-card {
+      margin-top: 28px;
+      border-radius: var(--card-radius);
+      padding: 20px;
+      box-shadow: var(--shadow);
+      font-weight: 600;
+      font-size: 1.1rem;
+      user-select: text;
+      white-space: pre-line;
+    }
+    .result-card.green {
+      background-color: var(--green-bg);
+      color: var(--green-text);
+    }
+    .result-card.red {
+      background-color: var(--red-bg);
+      color: var(--red-text);
+    }
+    .error-message {
+      margin-top: -12px;
+      margin-bottom: 16px;
+      color: #b91c1c;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+    .share-btn, .recheck-btn {
+      margin-top: 16px;
+      background-color: #10b981;
+      border: none;
+      color: white;
+      font-weight: 600;
+      padding: 12px 0;
+      border-radius: var(--card-radius);
+      cursor: pointer;
+      font-size: 1rem;
+      width: 100%;
+      transition: background-color 0.3s;
+    }
+    .share-btn:hover, .recheck-btn:hover {
+      background-color: #059669;
+    }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <h1>Impulse Purchase Evaluator</h1>
+    <p class="subtitle">A quick check before you "Add to Cart"</p>
+
+    <form id="impulse-form" novalidate>
+      <div class="input-group">
+        <label for="item-price">1. Item Price (€)</label>
+        <div class="input-with-symbol">
+          <span class="symbol">€</span>
+          <input type="number" id="item-price" min="1" placeholder="0" required />
+        </div>
+        <p class="error-message" id="price-error" style="display:none;">Please enter a valid price.</p>
+      </div>
+
+      <div class="input-group">
+        <label for="monthly-wage">2. Your Monthly Income (€)</label>
+        <input type="number" id="monthly-wage" min="1" placeholder="0" required />
+        <p class="error-message" id="income-error" style="display:none;">Please enter your monthly income.</p>
+      </div>
+
+      <div class="input-group">
+        <label>3. Is it a Need or Want?</label>
+        <div class="radio-group">
+          <div class="toggle-button" data-name="needWant" data-value="need">Need</div>
+          <div class="toggle-button" data-name="needWant" data-value="want">Want</div>
+        </div>
+        <p class="error-message" id="needwant-error" style="display:none;">Please select one.</p>
+      </div>
+
+      <div class="input-group">
+        <label>4. Your Current Mood</label>
+        <div class="mood-group">
+          <div class="toggle-button emoji" data-name="mood" data-value="happy">😊</div>
+          <div class="toggle-button emoji" data-name="mood" data-value="sad">😔</div>
+          <div class="toggle-button emoji" data-name="mood" data-value="stressed">😫</div>
+        </div>
+        <p class="error-message" id="mood-error" style="display:none;">Please select your mood.</p>
+      </div>
+
+      <button type="submit" id="check-btn">Check Purchase</button>
+    </form>
+
+    <section id="result-section" style="display:none;">
+      <div id="result-card" class="result-card" tabindex="-1"></div>
+      <button class="share-btn" id="share-result-btn">Share Result</button>
+      <button class="recheck-btn" id="recheck-btn">Re-check</button>
+    </section>
+  </main>
+
+  <script>
+    (() => {
+      const form = document.getElementById('impulse-form');
+      const priceInput = document.getElementById('item-price');
+      const wageInput = document.getElementById('monthly-wage');
+      const resultSection = document.getElementById('result-section');
+      const resultCard = document.getElementById('result-card');
+      const shareBtn = document.getElementById('share-result-btn');
+      const re
