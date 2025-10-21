@@ -10,7 +10,7 @@ As one of Germany’s top coupon websites focused on saving your money, **Rabatt
 
 Live Tool
 
-[Use the Impulse Purchase Evaluator](https://github.com/elizabeth-olsen12/Impulse-purchase-evaluator)
+[Use the Impulse Purchase Evaluator](https://rabattdigga.de/impulskauf-evaluator)
 
 Files in This Repo
 
