@@ -1,4 +1,4 @@
-Impulse Purchase Evaluator
+**Impulse Purchase Evaluator**
 
 RabattDigga.de designed the Impulse Purchase Evaluator to help shoppers pause and think before making a purchase. Just enter the product price, your monthly income, whether it’s a need or a want, and your current mood.
 
